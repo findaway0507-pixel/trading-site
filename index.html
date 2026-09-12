@@ -4,18 +4,20 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#fbfdff">
 <title>交易报告</title>
-<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"2c265qBuCyuvkEaMsCGYsg==","iv":"rmRJzv72tnjOrtjH","ct":"SCCQ7NvM2k3rcNKc7eZzkL1woCL6gPdvejc+3Kw="};</script>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"8wWZWFPSxU7rPVR3YHi87w==","iv":"kFLqLLmiRvOf1wFd","ct":"okbqowCI6mJkmDvfx2LjsZ0LWjrZtu8sja5SgYY="};</script>
 <style>
 :root{
-  --bg:#f5fafd; --bg2:#fbf8f2; --panel:#ffffff; --panel2:#f6faff; --line:#e9dfcf;
-  --tx:#22303f; --tx2:#6e604e; --tx3:#a3957f;
-  --gold:#2286d8; --gold2:#43a8e6; --gold-d:#1e77cc; --soft:rgba(44,143,232,.14);
-  --s1:#2286d8; --s2:#6fd0e8; --s3:#e05a4a; --s4:#9b6fc4;
-  --up:#dd3f36; --down:#0f9a56;
-  --ink:#1b2a3a;                      /* 卡通描边色 */
-  --k1:#43a8e6; --k2:#6fd0e8; --k3:#6fd0e8; --k4:#38c3f0; --k5:#38c3f0; --k6:#7fa8ff;
+  /* 全蓝系。值对应 tokens/tokens.json 的语义层，改色先改那边，不要在这里发明新色。 */
+  --bg:#f5fafd;                                        /* surface.canvas 页面底 */
+  --panel2:#fbfdff; --line:#e6f2f7;                    /* surface.sunken / line.default */
+  --tx:#22303f; --tx2:#43596f; --tx3:#55708c;          /* content 三级文字 */
+  --gold:#2c8fe8; --gold2:#43a8e6; --gold-d:#1e77cc;   /* 主色 solid / hover / active */
+  --s1:#2286d8; --s2:#6fd0e8; --s3:#4fa8f5; --s4:#7fa8ff;  /* 四个时段点缀，全蓝系 */
+  --up:#dd3f36; --down:#0f9a56;                        /* 红涨绿跌：A 股口径，不许改 */
+  --ink:#1b2a3a;                                       /* 卡通描边色（登录页专用） */
+  --k1:#43a8e6; --k2:#6fd0e8; --k3:#38c3f0; --k4:#7fa8ff; --k6:#a9e4ff;
   --sh:0 6px 22px rgba(30,60,100,.10);
-  --ease:cubic-bezier(.22,.61,.36,1); --dur:.15s;
+  --ease:cubic-bezier(.22,.61,.36,1);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
@@ -28,7 +30,7 @@ input{font:inherit}
 .si{width:15px;height:15px;fill:none;stroke-width:1.9;stroke-linecap:round;
   stroke-linejoin:round;flex:0 0 auto}
 ::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-thumb{background:#ded2bd;border-radius:5px}
+::-webkit-scrollbar-thumb{background:#dbe8f5;border-radius:5px}
 ::-webkit-scrollbar-thumb:hover{background:#6fd0e8}
 ::-webkit-scrollbar-track{background:transparent}
 
@@ -36,11 +38,11 @@ input{font:inherit}
 #gate{position:fixed;inset:0;z-index:60;overflow:auto;padding:26px 20px;
   display:flex;align-items:center;justify-content:center;
   background:
-    radial-gradient(560px 420px at 12% 14%,#d8f0f8 0%,rgba(255,224,138,0) 62%),
-    radial-gradient(620px 460px at 88% 8%,#d8f0f8 0%,rgba(255,179,179,0) 62%),
+    radial-gradient(560px 420px at 12% 14%,#d8f0f8 0%,rgba(216,240,248,0) 62%),
+    radial-gradient(620px 460px at 88% 8%,#d8f0f8 0%,rgba(169,228,255,0) 62%),
     radial-gradient(680px 520px at 78% 94%,#a9e4ff 0%,rgba(169,228,255,0) 62%),
     radial-gradient(520px 420px at 16% 92%,#b8f5d8 0%,rgba(184,245,216,0) 62%),
-    linear-gradient(160deg,#fff8e7,#fff1f4 46%,#eef8ff)}
+    linear-gradient(160deg,#f5fafd,#eef8ff 46%,#d8f0f8)}
 #gate.hide{display:none}
 
 /* 页面四角的卡通小装饰 */
@@ -107,20 +109,20 @@ input{font:inherit}
 .chip2.a{background:#eff7ff}.chip2.b{background:#eff7ff}.chip2.c{background:#fbfdff}
 .field{display:flex;gap:9px;margin-top:18px}
 .field input{flex:1;min-width:0;padding:14px 15px;border-radius:16px;
-  border:3px solid var(--ink);background:#fffdf5;color:var(--tx);outline:none;
+  border:3px solid var(--ink);background:#fdfeff;color:var(--tx);outline:none;
   font-weight:650;transition:box-shadow .16s var(--ease),background .16s var(--ease)}
 .field input::placeholder{color:#9bb3c9;font-weight:600}
 .field input:focus{background:#fff;box-shadow:0 0 0 4px rgba(56,195,240,.55)}
 .btn-primary{padding:14px 22px;border-radius:16px;min-width:98px;font-size:15px;
   border:3px solid var(--ink);background:linear-gradient(140deg,#6fd0e8,var(--k1));
-  color:#3a1f00;font-weight:850;letter-spacing:.4px;
+  color:#08243f;font-weight:850;letter-spacing:.4px;
   box-shadow:4px 5px 0 var(--ink);
   transition:transform .12s var(--ease),box-shadow .12s var(--ease),filter .16s var(--ease)}
 .btn-primary:hover{filter:brightness(1.04);transform:translate(-1px,-1px);
   box-shadow:6px 7px 0 var(--ink)}
 .btn-primary:active{transform:translate(4px,5px);box-shadow:1px 1px 0 var(--ink)}
 .btn-primary.busy{opacity:.75;pointer-events:none}
-.err{min-height:17px;margin-top:11px;font-size:12.5px;font-weight:750;color:#d63a2f}
+.err{min-height:17px;margin-top:11px;font-size:12.5px;font-weight:750;color:#c0392b}
 .hint{margin-top:10px;font-size:11.5px;color:#7a93ab;font-weight:650;line-height:1.75;
   display:flex;align-items:center;gap:7px}
 @media (prefers-reduced-motion:reduce){
@@ -137,7 +139,7 @@ input{font:inherit}
 .icon{width:35px;height:35px;border-radius:10px;display:flex;align-items:center;
   justify-content:center;border:1px solid var(--line);background:#fff;
   transition:background .15s var(--ease),border-color .15s var(--ease)}
-.icon:hover{background:var(--panel2);border-color:#ddd0ba}
+.icon:hover{background:var(--panel2);border-color:#d8f0f8}
 .icon svg{width:16px;height:16px;stroke:var(--tx);stroke-width:2;fill:none;
   stroke-linecap:round}
 .titles{min-width:0;flex:1}
@@ -145,7 +147,7 @@ input{font:inherit}
   text-overflow:ellipsis;display:flex;align-items:center;gap:7px}
 .t2{font-size:11.5px;color:var(--tx3);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;margin-top:1px}
-.dot{width:8px;height:8px;border-radius:50%;background:#d9cdb8;flex:0 0 8px;
+.dot{width:8px;height:8px;border-radius:50%;background:#9bb3c9;flex:0 0 8px;
   transition:background .3s var(--ease),box-shadow .3s var(--ease)}
 .dot.on{background:var(--down);box-shadow:0 0 0 3px rgba(15,154,86,.16)}
 .ghost{padding:7px 13px;border-radius:10px;border:1px solid var(--line);
@@ -163,13 +165,13 @@ input{font:inherit}
   background:#fff;white-space:nowrap;
   transition:color .18s var(--ease),border-color .18s var(--ease),
     background .18s var(--ease),box-shadow .18s var(--ease),transform .12s var(--ease)}
-.tab:hover{color:var(--tx);border-color:#ddd0ba;transform:translateY(-1px)}
+.tab:hover{color:var(--tx);border-color:#d8f0f8;transform:translateY(-1px)}
 .tab .hm{font-size:10.5px;color:var(--tx3);font-variant-numeric:tabular-nums}
 .tab.on{color:#08243f;font-weight:750;border-color:transparent;
   background:linear-gradient(140deg,var(--gold2),#6fd0e8);
   box-shadow:0 4px 14px rgba(44,143,232,.30)}
 .tab.on .si{stroke:#08243f !important}
-.tab.on .hm{color:rgba(61,42,9,.72)}
+.tab.on .hm{color:rgba(8,36,63,.72)}
 
 /* 报告区：两个 iframe 交叉淡入，切换不再白屏抖动 */
 .stage{flex:1;min-height:0;position:relative;background:var(--bg)}
@@ -228,18 +230,18 @@ input{font:inherit}
 .item .chip{width:24px;height:24px;border-radius:7px;flex:0 0 24px;
   display:flex;align-items:center;justify-content:center;background:#fff;
   border:1px solid var(--line)}
-.item.on{background:linear-gradient(140deg,#eaf4ff,#fff8ec);
+.item.on{background:linear-gradient(140deg,#eaf4ff,#eef8ff);
   border-color:#d8f0f8;color:#08243f;font-weight:750}
 .item .hm{margin-left:auto;font-size:10.5px;color:var(--tx3);
   font-variant-numeric:tabular-nums}
 
-#scrim{position:fixed;inset:0;background:rgba(60,44,24,.38);backdrop-filter:blur(2px);
+#scrim{position:fixed;inset:0;background:rgba(30,60,100,.38);backdrop-filter:blur(2px);
   z-index:35;opacity:0;pointer-events:none;
   transition:opacity .24s var(--ease)}
 
 /* ---------------- 手机端 ---------------- */
 @media (max-width:899px){
-  .stage{background:#f5fafd}
+  .stage{background:var(--bg)}
   /* 手机上一切可点元素 ≥44px（design.md §1.3 tapTargetMin） */
   .top{height:52px;padding:0 10px}
   .t2{display:none}
@@ -254,7 +256,7 @@ input{font:inherit}
     border-radius:22px 22px 0 0;border-right:0;border-top:1px solid var(--line);
     transform:translate3d(0,101%,0);
     transition:transform .3s cubic-bezier(.32,.72,0,1);
-    box-shadow:0 -14px 44px rgba(96,70,30,.22);will-change:transform;
+  box-shadow:0 -14px 44px rgba(30,60,100,.22);will-change:transform;
     padding-bottom:env(safe-area-inset-bottom,0)}
   #side.open{transform:translate3d(0,0,0)}
   #scrim.show{opacity:1;pointer-events:auto}
@@ -359,8 +361,10 @@ input{font:inherit}
     </header>
     <div class="tabs" id="tabs"></div>
     <div class="stage">
-      <iframe id="viewA" class="view" sandbox="" referrerpolicy="no-referrer"></iframe>
-      <iframe id="viewB" class="view" sandbox="" referrerpolicy="no-referrer"></iframe>
+      <!-- 报告正文要记住"哪几段是展开的"，所以放开脚本；但**不给 same-origin**，
+           正文仍是 opaque origin —— 读不到外壳的 DOM 与 localStorage，只能 postMessage。 -->
+      <iframe id="viewA" class="view" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
+      <iframe id="viewB" class="view" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
       <div id="empty">
         <div class="emptycard">
           <div class="big">🗂️</div>
@@ -431,6 +435,39 @@ function wk(d){try{return WEEK[new Date(d+"T00:00:00").getDay()]}catch(e){return
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,
   c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
+/* 折叠记忆（正文 ↔ 外壳）：正文在 sandbox iframe 里，读不到外壳的 localStorage，
+   所以只用 postMessage 交换"哪几段是展开的"；正文与口令都不走这条通道。
+   正文没接这条通道时（例如直接双击打开报告）一切照旧，不影响阅读。 */
+const FOLDKEY="mf.fold",FOLDMAX=40;
+function foldAll(){try{return JSON.parse(localStorage.getItem(FOLDKEY)||"{}")||{}}catch(e){return{}}}
+function foldSave(fid,id,open){
+  const a=foldAll(),m=a[fid]||{};
+  if(open)m[id]=1;else delete m[id];
+  if(Object.keys(m).length)a[fid]=m;else delete a[fid];
+  const ks=Object.keys(a);                       // 只留最近 40 份报告，别把 localStorage 撑爆
+  ks.slice(0,Math.max(0,ks.length-FOLDMAX)).forEach(k=>delete a[k]);
+  try{localStorage.setItem(FOLDKEY,JSON.stringify(a))}catch(e){}
+}
+function foldView(src){
+  for(let i=0;i<VIEWS.length;i++){
+    const v=VIEWS[i];
+    try{if(v.contentWindow===src)return v}catch(e){}
+  }
+  return null;
+}
+window.addEventListener("message",e=>{
+  const d=e.data;
+  if(!d||typeof d!=="object"||typeof d.t!=="string")return;
+  if(d.t.indexOf("mffold:")!==0)return;
+  const v=foldView(e.source);if(!v)return;
+  const fid=v.dataset.fid;if(!fid)return;
+  if(d.t==="mffold:ready"){
+    try{e.source.postMessage({t:"mffold:state",map:foldAll()[fid]||{}},"*")}catch(err){}
+  }else if(d.t==="mffold:set"&&typeof d.id==="string"){
+    foldSave(fid,d.id,!!d.open);
+  }
+});
+
 function paintHero(){
   const el=$("#hero");if(!el)return;
   const cols=["#43a8e6","#6fd0e8","#38c3f0","#38c3f0","#7fa8ff"];
@@ -484,7 +521,10 @@ async function doUnlock(){
 }
 function curView(){return VIEWS[ACTIVE]}
 function altView(){return VIEWS[1-ACTIVE]}
-function setDocSync(html){const v=curView();if(!v)return;v.classList.add("on");v.srcdoc=html;}
+/* fid 用于折叠记忆归属（预览无口令模式也走这里）；不给就按不记名处理 */
+function setDocSync(html,fid){const v=curView();if(!v)return;
+  if(fid)v.dataset.fid=fid;
+  v.classList.add("on");v.srcdoc=html;}
 function showEmpty(on){
   $("#empty").classList.toggle("show",!!on);
   if(on)VIEWS.forEach(v=>{v.classList.remove("on");v.srcdoc="";});
@@ -526,6 +566,7 @@ async function openItem(fid,instant){
   const from=curView(),to=altView();
   await new Promise(res=>{
     let done=false;const fin=()=>{if(!done){done=true;res()}};
+    to.dataset.fid=fid;                     // 折叠记忆按报告存，先记名再塞内容
     to.onload=fin;to.srcdoc=html;setTimeout(fin,cached?250:1200);   // 兜底，别把界面卡住
   });
   to.classList.add("on");
