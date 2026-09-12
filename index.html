@@ -329,7 +329,7 @@ input{font:inherit}
     <div class="err" id="err"></div>
     <div class="hint"><svg class="si" viewBox="0 0 24 24" style="stroke:var(--tx3)">
       <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-      </svg>服务器上只有密文，忘记口令无法找回</div>
+      </svg>今天已登录过就不用再输；跨零点后首次访问需重新输入</div>
   </form>
 </div>
 
@@ -400,6 +400,25 @@ let KEY=null,ITEMS=null,CUR=null,ACTIVE=0,LASTDAY=null;
 
 function store(k,v){try{if(v===undefined)return sessionStorage.getItem(k);
   sessionStorage.setItem(k,v)}catch(e){}return null}
+/* 当日免密：登录成功后把口令记一天（跨零点自动失效）。
+   注意：这是"方便"不是"更安全"——口令会以 base64 存在本机浏览器里（仅当日），
+   所以「锁定」会把它清掉；共用电脑上别用这招。 */
+const DAYKEY="_pd";
+function today(){const d=new Date();return d.getFullYear()+"-"
+  +String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function savedPw(){
+  try{const raw=localStorage.getItem(DAYKEY);
+    if(raw){const o=JSON.parse(raw);if(o&&o.d===today()&&o.k)return atob(o.k)}}catch(e){}
+  return store("_p")||"";
+}
+function savePw(pw){
+  try{localStorage.setItem(DAYKEY,JSON.stringify({d:today(),k:btoa(pw)}))}catch(e){}
+  try{sessionStorage.removeItem("_p")}catch(e){}
+}
+function forgetPw(){
+  try{localStorage.removeItem(DAYKEY)}catch(e){}
+  try{sessionStorage.removeItem("_p")}catch(e){}
+}
 function wk(d){try{return WEEK[new Date(d+"T00:00:00").getDay()]}catch(e){return""}}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,
   c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
@@ -444,10 +463,11 @@ async function doUnlock(){
     buildNav();refreshTabs();
     if(ITEMS.length){await openItem(ITEMS[0].f,true);}
     else{renderEmptyHead();showEmpty(true);}
-    store("_p",pw);
+    savePw(pw);                                   // 记一天，明天首次访问再输
   }catch(e){
     ITEMS=null;KEY=null;
-    $("#err").textContent="口令错误，或报告尚未生成。";
+    forgetPw();                                  // 口令错了就别留着
+    $("#err").textContent="口令错误，请重新输入。";
   }finally{go.classList.remove("busy");go.textContent="解锁";}
 }
 function curView(){return VIEWS[ACTIVE]}
@@ -552,8 +572,8 @@ function toggleSide(force){
   s.classList.toggle("open",open);sc.classList.toggle("show",open);
 }
 function doLock(){
-  KEY=null;ITEMS=null;CUR=null;LASTDAY=null;store("_p",null);
-  try{sessionStorage.removeItem("_p")}catch(e){}
+  KEY=null;ITEMS=null;CUR=null;LASTDAY=null;
+  forgetPw();                                    // 明确锁定 = 今天也要重新输
   VIEWS.forEach(v=>{v.classList.remove("on");v.srcdoc="";});
   showEmpty(false);
   $("#nav").innerHTML="";$("#tabs").innerHTML="";
@@ -562,7 +582,7 @@ function doLock(){
 }
 window.addEventListener("DOMContentLoaded",()=>{
   paintHero();
-  const pw=store("_p");
+  const pw=savedPw();
   if(pw){$("#pw").value=pw;doUnlock();}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")toggleSide(false)});
