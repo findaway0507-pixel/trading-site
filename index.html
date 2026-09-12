@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#fbfdff">
 <title>交易报告</title>
-<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"lH57IXJpJ3VytVCZ1zma6g==","iv":"0T4AKYLzMDGF0xfp","ct":"gY3Y6EAiJoxr/2ERqg09Eg0GxyvaGduVqfOBwUPBU+fbTD+IFPOUIJfjZhpWAiir0HIE1xJtpQO0jcSbQBSCGULsmt1YnWyzQ0Xw8B7lNW/m0Mwzt/pFGgwOMsXu3gcsziha9xEqzeZGxpr3oZF785E/qZV344C6zAcDxYjqzgSR0j9wFgQNJr8G1mSg2cIswI0DZzzJJ3BkL1r9Df1vmV+6nmkdlW2XI9M6LwnKZbcrVvUjlBP1hkxXT35IeymaT8gkWIodeG4p/SJVOvBbib6t98wPuA4WlyN7ci/lTaR0DiGCw+XVkwkf77S/XCWYdiE2tLgjjjIoUHZP2E84FGUi9x+pJ5mYZgj3+izAFWc6/xp2gyuSkx9BXWItGGHzI3CnhEkYeT+P95a4hWgXxK/ueRZMPMl2+2byfGN+Xa+z6wqiM1sFicBTyBmqmoZqEy43y8DXtxBQO7JuKhuYy3u0HyQexRaXdqfhPt6N6GVWC1Xv//UtG8QT"};</script>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"8xkvJ9nhSkb0qay52Us6Iw==","iv":"U/+xagSfn2qggZB5","ct":"a3eVu5x4aKd4qwkgEsHFmqkl3u2Zn0MHX8UZ+uaPq1M9+HELvNV+kBc2cmUOYwGv9lJH/osYu0d/pHzwT1fnVg3kdSZ96q/qQwEA/eGavgadaBCj3INiz6rqpij9TU6h4osUqgxZqxfs5/XjCglMQa8rBOuZwfqXQaJtrDf3xeWw05vmlqxTIeZxephJ9r/szjpcmRr1Xn11Go2F0h3tnnD7Acsa+Wn1rLm/EXQ2uEItwzYGdPSWoyNOojSUZFsE62FtXGqEyo3W45+KmRqeQMqqaVimbDDumPpyd0tJc+rVKVVBAM3mWO0t9mmvMmVa8N8ax3KNKd9HMp121zBQyHDLSHtsV7VFp3TZqCyFUABX7DLVuzGJ5Do+76bqNZai01Alg93XqqSP/1qn6eg/OKjetyFyFIRd6wnm80FW+v+cpAX9WNggdhd81A/Ez3z57e5hanjEZGWgwiZSpgZXFz3k/Oh4XX4l0bqTzn8QYK4fXIwujPQZl8ur"};</script>
 <style>
 :root{
   --bg:#f5fafd; --bg2:#fbf8f2; --panel:#ffffff; --panel2:#f6faff; --line:#e9dfcf;
@@ -176,7 +176,7 @@ input{font:inherit}
 .view{position:absolute;inset:0;width:100%;height:100%;border:0;
   background:#fbfdff;opacity:0;pointer-events:none;z-index:1;
   transform:translateY(6px) scale(.996);
-  transition:opacity var(--dur) var(--ease),transform .3s var(--ease)}
+  transition:opacity .12s var(--ease);will-change:opacity}
 .view.on{opacity:1;pointer-events:auto;z-index:2}
 
 /* 还没有任何报告时的空状态（照样能解锁进来，只是没内容） */
