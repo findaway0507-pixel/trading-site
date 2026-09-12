@@ -4,6 +4,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#fbf6ee">
 <title>交易报告</title>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"wnoxlApaUUZKHGDjyD1VCg==","iv":"/BIvZktVXDbVJCfD","ct":"jlj/aBFvZGI6WjqQaJzzmQJwD/Nwc+eETCC9vx24ggnZezk73Cqm4xvlLZEnqL9wm/B1kSPpeR9Tyu+jM4zTNz4WAOFPRm4MjDoQPT5lU9ueGr0g6sz/dWupYVdq0/8mmQ3cH2otAZdwl4dZc07NMxlS7S0YVUL+zUzpeqUxjIaYQw+wcWNWiCCjPOrFX5lH"};</script>
 <style>
 :root{
   --bg:#f2ece2; --bg2:#fbf8f2; --panel:#ffffff; --panel2:#f7f2e9; --line:#e9dfcf;
@@ -449,7 +450,10 @@ async function doUnlock(){
   const go=$("#go");go.classList.add("busy");go.textContent="解锁中";
   try{
     if(!ITEMS){
-      const m=await (await fetch("data/manifest.json",{cache:"no-store"})).json();
+      /* 清单已内联在页面里（构建时写入 window.MF）：这样"报告列表"和"报告正文"
+         永远来自同一次构建，不会再被 CDN 缓存成新旧两份。
+         取不到内联值时（例如老版本外壳或手改的页面）再退回网络取。 */
+      const m=window.MF||await (await fetch("data/manifest.json",{cache:"no-store"})).json();
       const k=await deriveKey(pw,b64(m.salt),m.iter);
       const pt=await crypto.subtle.decrypt(
         {name:"AES-GCM",iv:b64(m.iv),additionalData:new TextEncoder().encode("manifest")},
