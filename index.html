@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#f4fafe">
 <title>交易报告</title>
-<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"CYzKkZ/GChRtGhgRhW8cHg==","iv":"HThRYhSvwl2j4JLG","ct":"x0S4az0ThhLMDE2iYsUgpFRH5oxf8CuAZZvPwSh1/uoluEvjHzt388vb8Zyx0PFsMJ7U+ybvDpQc6jdStxufeVUL7dUP3lDKnw7MQCgpYL+/gGYbm2s1Xr00KcCO/LrIZaJZU0HaChC9VFL+1to4em5ZhAf2PKshoSSB1J8gaz51wy0FIEz0c/yzRRTzAGAP"};</script>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"cmGm6ScfsfYUArg19hmAjQ==","iv":"q1UYog0lZhfeQd57","ct":"6pWKrGCfcOqJs8rNb6aIj0sq/PKVMG7dlisWYEliMYWaVnG9ybEos+I36qgYgZHZbXFvq86sljPBwRVlJrSKTPS0tkuIF1PtQfSxHR2++yqKO2tJFCs3iJlQpNL897M9uaDT2/w28Y74jaS5qqZwwcZE0oXhlPiRlHSG/WuxT6nuR2Ek6Xb8/8Tcdg+lp4NQ"};</script>
 <style>
 :root{
   --bg:#eaf2fa; --bg2:#fbf8f2; --panel:#ffffff; --panel2:#eef5fc; --line:#e9dfcf;
@@ -13,7 +13,7 @@
   --s1:#2c8fe8; --s2:#ef8f4a; --s3:#e05a4a; --s4:#9b6fc4;
   --up:#dd3f36; --down:#0f9a56;
   --ink:#1b2a3a;                      /* 卡通描边色 */
-  --k1:#5bb8f5; --k2:#ffc531; --k3:#ffc531; --k4:#3fd0a8; --k5:#38c3f0; --k6:#7fa8ff;
+  --k1:#4fa8f5; --k2:#6cc4ff; --k3:#6cc4ff; --k4:#38c3f0; --k5:#38c3f0; --k6:#7fa8ff;
   --sh:0 6px 22px rgba(30,60,100,.10);
   --ease:cubic-bezier(.22,.61,.36,1); --dur:.22s;
 }
@@ -36,7 +36,7 @@ input{font:inherit}
 #gate{position:fixed;inset:0;z-index:60;overflow:auto;padding:26px 20px;
   display:flex;align-items:center;justify-content:center;
   background:
-    radial-gradient(560px 420px at 12% 14%,#ffdf9b 0%,rgba(255,224,138,0) 62%),
+    radial-gradient(560px 420px at 12% 14%,#bfe0ff 0%,rgba(255,224,138,0) 62%),
     radial-gradient(620px 460px at 88% 8%,#ffb3b3 0%,rgba(255,179,179,0) 62%),
     radial-gradient(680px 520px at 78% 94%,#a9e4ff 0%,rgba(169,228,255,0) 62%),
     radial-gradient(520px 420px at 16% 92%,#b8f5d8 0%,rgba(184,245,216,0) 62%),
@@ -69,7 +69,7 @@ input{font:inherit}
   border:3px solid var(--ink);overflow:hidden;
   background:linear-gradient(180deg,#9fe0ff,#d7f2ff 56%,#fff3d6)}
 .hero .sun{position:absolute;top:16px;right:128px;width:40px;height:40px;border-radius:50%;
-  background:radial-gradient(circle at 34% 32%,#fff6bd,#ffc531);
+  background:radial-gradient(circle at 34% 32%,#dcf1ff,#6cc4ff);
   border:3px solid var(--ink);animation:sunspin 16s linear infinite}
 @keyframes sunspin{to{transform:rotate(360deg)}}
 .hero .rocket{position:absolute;right:10px;top:6px;width:108px;height:100px;
@@ -82,7 +82,7 @@ input{font:inherit}
   animation:pop .5s cubic-bezier(.2,.8,.3,1.25) backwards}
 @keyframes pop{from{transform:translateY(16px) scaleY(.2);opacity:0}to{transform:none;opacity:1}}
 .hero .tag{position:absolute;left:14px;top:12px;font-size:11px;font-weight:850;
-  letter-spacing:.1em;color:#7c4e06;background:#fff;border:2.5px solid var(--ink);
+  letter-spacing:.1em;color:#124b84;background:#fff;border:2.5px solid var(--ink);
   border-radius:999px;padding:3px 10px;text-transform:uppercase;
   box-shadow:2px 2px 0 rgba(27,42,58,.2)}
 
@@ -95,7 +95,7 @@ input{font:inherit}
   stroke-linecap:round;stroke-linejoin:round;
   filter:drop-shadow(1px 1px 0 rgba(27,42,58,.4))}
 .card h1{margin:0;font-size:23px;font-weight:850;letter-spacing:.4px}
-.card h1 .hi{background:linear-gradient(180deg,transparent 60%,#ffdf9b 60%);
+.card h1 .hi{background:linear-gradient(180deg,transparent 60%,#bfe0ff 60%);
   border-radius:4px;padding:0 3px}
 .card .sub{margin:5px 0 0;font-size:12px;color:#7a93ab;font-weight:650}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin:15px 0 2px}
@@ -104,7 +104,7 @@ input{font:inherit}
   background:#fff;box-shadow:2px 2px 0 rgba(27,42,58,.18)}
 .chip2 svg{width:13px;height:13px;stroke:var(--ink);stroke-width:2.2;fill:none;
   stroke-linecap:round;stroke-linejoin:round}
-.chip2.a{background:#d8f7e7}.chip2.b{background:#ffedc7}.chip2.c{background:#d9efff}
+.chip2.a{background:#e3f2ff}.chip2.b{background:#e3f2ff}.chip2.c{background:#f2faff}
 .field{display:flex;gap:9px;margin-top:18px}
 .field input{flex:1;min-width:0;padding:14px 15px;border-radius:16px;
   border:3px solid var(--ink);background:#fffdf5;color:var(--tx);outline:none;
@@ -191,7 +191,7 @@ input{font:inherit}
 .emptycard p{margin:0;color:#7a93ab;font-size:13px;font-weight:650;line-height:1.8}
 .emptycard .tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:16px}
 .emptycard .tag2{font-size:11.5px;font-weight:750;border:2.5px solid var(--ink);
-  border-radius:999px;padding:5px 11px;background:#ffedc7;box-shadow:2px 2px 0 rgba(27,42,58,.18)}
+  border-radius:999px;padding:5px 11px;background:#e3f2ff;box-shadow:2px 2px 0 rgba(27,42,58,.18)}
 
 /* ---------------- 目录（桌面侧栏 / 手机抽屉）---------------- */
 #side{background:#fbfdff;border-right:1px solid var(--line);
@@ -228,7 +228,7 @@ input{font:inherit}
 .item .chip{width:24px;height:24px;border-radius:7px;flex:0 0 24px;
   display:flex;align-items:center;justify-content:center;background:#fff;
   border:1px solid var(--line)}
-.item.on{background:linear-gradient(140deg,#fff3df,#fff8ec);
+.item.on{background:linear-gradient(140deg,#eaf4ff,#fff8ec);
   border-color:#f2ddb6;color:#08243f;font-weight:750}
 .item .hm{margin-left:auto;font-size:10.5px;color:var(--tx3);
   font-variant-numeric:tabular-nums}
@@ -290,21 +290,21 @@ input{font:inherit}
       <span class="sun"></span>
       <div class="bars" id="hero"></div>
       <svg class="rocket" viewBox="0 0 130 120" aria-hidden="true">
-        <path d="M6 112 C34 100 56 78 74 44" fill="none" stroke="#5bb8f5"
+        <path d="M6 112 C34 100 56 78 74 44" fill="none" stroke="#4fa8f5"
           stroke-width="5" stroke-linecap="round" stroke-dasharray="0.5 13"/>
         <g transform="translate(56 -2) rotate(30 30 40)">
           <path d="M30 4 C46 20 54 40 54 58 L54 74 C54 79 50 83 45 83 L15 83 C10 83 6 79 6 74 L6 58 C6 40 14 20 30 4 Z"
             fill="#ffffff" stroke="#1b2a3a" stroke-width="3.6" stroke-linejoin="round"/>
-          <path d="M6 60 C-4 70 -8 84 -8 96 L6 86 Z" fill="#5bb8f5"
+          <path d="M6 60 C-4 70 -8 84 -8 96 L6 86 Z" fill="#4fa8f5"
             stroke="#1b2a3a" stroke-width="3.6" stroke-linejoin="round"/>
-          <path d="M54 60 C64 70 68 84 68 96 L54 86 Z" fill="#5bb8f5"
+          <path d="M54 60 C64 70 68 84 68 96 L54 86 Z" fill="#4fa8f5"
             stroke="#1b2a3a" stroke-width="3.6" stroke-linejoin="round"/>
           <circle cx="30" cy="40" r="11" fill="#38c3f0" stroke="#1b2a3a" stroke-width="3.4"/>
           <path d="M18 87 L42 87 L34 106 C32 111 27 112 24 109 L18 87 Z"
-            fill="#ffc531" stroke="#1b2a3a" stroke-width="3.4" stroke-linejoin="round"/>
+            fill="#6cc4ff" stroke="#1b2a3a" stroke-width="3.4" stroke-linejoin="round"/>
         </g>
         <path d="M20 22 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4z"
-          fill="#ffc531" stroke="#1b2a3a" stroke-width="2" stroke-linejoin="round"/>
+          fill="#6cc4ff" stroke="#1b2a3a" stroke-width="2" stroke-linejoin="round"/>
         <path d="M106 86 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"
           fill="#7fa8ff" stroke="#1b2a3a" stroke-width="2" stroke-linejoin="round"/>
       </svg>
@@ -426,7 +426,7 @@ function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,
 
 function paintHero(){
   const el=$("#hero");if(!el)return;
-  const cols=["#5bb8f5","#ffc531","#3fd0a8","#38c3f0","#7fa8ff"];
+  const cols=["#4fa8f5","#6cc4ff","#38c3f0","#38c3f0","#7fa8ff"];
   let h="",seed=7;
   for(let i=0;i<14;i++){
     seed=(seed*97+13)%100;
