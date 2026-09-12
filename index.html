@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#fbfdff">
 <title>交易报告</title>
-<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"hzG0uDxs4YqnPHI3tr3rBA==","iv":"DFmG/JmFBRMQNS7E","ct":"lnoRjk4QFzM8GntimB75/MQvWss9YjeGxu92kzzyc5bucsk5J5ehXOVj4nufq2epUVo/Wv2deL+Q4tNkS7qmloei4Y28NqKiDTTDdPlziZnjrHOaeVinIQppuc8bE3p3+Q29g4WHonqQ494UDz0t4pZc/3np0Sy9Q7GUU+5go0u+pIwwWez906uAxvxD7xI+7iEv6PioqMKWHFsDTT90vUTB7aDf4RdyoE1Teld/DWmpIdAASTz8RN7V+c7SfzlLMj0N2qwbEH5bsoiyKYd+xw78hUNAx+9TZe3QON/XUc/z/UOxPJyTGOo0A2XC7NhsEjbc9dPhBDwsi77FqGV7bXHcBMStPryQGcSYP/UvuonPr5/sMtOb0vrgkM9qMc3QFnHN1n+zi9Lf12e4gfGVYyU3sHAP6rzbrVYsHrsE8LEty1NjhIMyBoxOdDtkBFywe/SiJ5eSCAnt3l0rOOdiEbMajli3Sn4x5D6Sn3J2qqfwGfsLht8TOAkN"};</script>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"6R1O0nlJuM8JD/+7NQa33Q==","iv":"oqRGIAy3lOJhFqd1","ct":"IkI2oZGe+4zEaRgz6YRockhDQIiVc9vRrlp8gSUxmdh7NZgqFjS3m/A0j45/yghg7n8drXtjFep1HFp7uR2AMeOlb8Cjwsz7MruYMUvru9UOIfpOLGWiiMlbHBPMutBd635j5BAfWGXCaeMKdSQLQcI5CSvoRwkcBgrPmIFBKZKQKvu1htoXrSQBnOFm/U/jeEEaG/popSELPMiOVHW4bUojCzCdqoNJzs6I2EjNMPB9BFeTfKHbwedK70DPCZ781spxHEMP5r5RI8p3PmqTkCMrjSLO/EcMKOVsgJdHMiEhlu26v1wuyt++rDN8FmgIcDGeqeuIR+HUxA7vFWi1EkzyhwcqCPKi98jxn7mxqRHt4+buzWydJWnGVQRQJDtzd/xEs2MUvJfhOzwdsyTihym0UxkYUtJZ399q/LkCl4Xl38notk9vUUO+KveomqA3xinlxZbrvztsVnHxCuGnvO6VbGD7WP4gqgIYYrjnl8wMch98V7Pv97KC"};</script>
 <style>
 :root{
   --bg:#f5fafd; --bg2:#fbf8f2; --panel:#ffffff; --panel2:#f6faff; --line:#e9dfcf;
@@ -417,6 +417,12 @@ function savePw(pw){
   try{localStorage.setItem(DAYKEY,JSON.stringify({d:today(),k:btoa(pw)}))}catch(e){}
   try{sessionStorage.removeItem("_p")}catch(e){}
 }
+function loadDays(){
+  try{return JSON.parse(localStorage.getItem("_days")||"[]")}catch(e){return []}
+}
+function saveDays(a){
+  try{localStorage.setItem("_days",JSON.stringify(a))}catch(e){}
+}
 function forgetPw(){
   try{localStorage.removeItem(DAYKEY)}catch(e){}
   try{sessionStorage.removeItem("_p")}catch(e){}
@@ -549,7 +555,7 @@ function byDate(){
 function buildNav(){
   const days=byDate();
   $("#cnt").textContent=days.length+" 天 · "+(ITEMS||[]).length+" 份";
-  const openSet=new Set();
+  const openSet=new Set(loadDays());
   $("#nav").querySelectorAll(".day").forEach(el=>{
     if(!el.classList.contains("collapsed"))openSet.add(el.dataset.d)});
   let h="";
@@ -592,7 +598,12 @@ function markActive(){
   const on=tabs.querySelector(".tab.on");
   if(on&&on.scrollIntoView)on.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
 }
-function toggleDay(btn){btn.parentElement.classList.toggle("collapsed")}
+function toggleDay(btn){
+  btn.parentElement.classList.toggle("collapsed");
+  saveDays([...$("#nav").querySelectorAll(".day")]
+    .filter(el=>!el.classList.contains("collapsed"))
+    .map(el=>el.dataset.d));
+}
 function toggleSide(force){
   const s=$("#side"),sc=$("#scrim");
   const open=force===undefined?!s.classList.contains("open"):!!force;
