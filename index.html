@@ -239,6 +239,16 @@ input{font:inherit}
 /* ---------------- 手机端 ---------------- */
 @media (max-width:899px){
   .stage{background:#f2ece2}
+  /* 手机上一切可点元素 ≥44px（design.md §1.3 tapTargetMin） */
+  .top{height:52px;padding:0 10px}
+  .t2{display:none}
+  .icon{width:40px;height:40px}
+  .ghost{min-height:40px}
+  .tabs{padding:8px 10px;gap:6px;position:sticky;top:52px;z-index:15}
+  .tab{min-height:40px;padding:9px 13px}
+  .item{min-height:46px;padding:12px 12px}
+  .day-h{min-height:46px;padding:11px 11px}
+  .side-h{min-height:56px}
   #side{position:fixed;left:0;right:0;bottom:0;max-height:78vh;
     border-radius:22px 22px 0 0;border-right:0;border-top:1px solid var(--line);
     transform:translate3d(0,101%,0);
