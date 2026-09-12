@@ -100,7 +100,9 @@ async function unlock(){
     if(!META){
       const m=await (await fetch('data/manifest.json',{cache:'no-store'})).json();
       const k=await deriveKey(pw,b64(m.salt),m.iter);
-      const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(m.iv)},k,b64(m.ct));
+    const pt=await crypto.subtle.decrypt(
+      {name:'AES-GCM',iv:b64(m.iv),additionalData:new TextEncoder().encode('manifest')},
+      k,b64(m.ct));
       META={items:JSON.parse(new TextDecoder().decode(pt)).items};
       KEY=k;
     }
@@ -118,7 +120,9 @@ async function unlock(){
 }
 async function openItem(fid){
   const d=await (await fetch('data/'+fid+'.json',{cache:'no-store'})).json();
-  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.iv)},KEY,b64(d.ct));
+  const pt=await crypto.subtle.decrypt(
+    {name:'AES-GCM',iv:b64(d.iv),additionalData:new TextEncoder().encode(fid)},
+    KEY,b64(d.ct));
   const v=$('#view');
   v.srcdoc=new TextDecoder().decode(pt);
   v.style.display='block';
