@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#fbfdff">
 <title>交易报告</title>
-<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"utlCT4L34EsOJyTGgBPHhQ==","iv":"zmA9bjIWbHw66o4R","ct":"29JKzryAt4hO2aTdqWQ6nsKQ2ndUpGfZoVUiV/sawBgHJ7BkHNq2yazyb/3RuBhCQU+kGM+9L42cWHxKUfUEi/9bE/xSNLNEPfGtjZKVvoCkljXFKNqM99cTm+escbL+HzA+ed4ZI0JKaoqdclNDQMoPcpSgtwbzbQfrEMNvc4nznF4F4DhokDYmugvnJBwzK2YgfGLmaG0aaGmqy6qz2RaLCIV+JiXKIzJun0rOOOGn+++J4GmXQ0ZiIyjX9G2RqO3X8jL5JaVZvA21sIbQ1AzHCVeJvXXeB01Oq4Me26i5gEY5bfWQwgwb2zKm6AH/wqVhv+dXFbcJFHbR/JmsZp/Du0ytPdC8OBdVSzGSKZ8VL5U+jrdaMrz1PXsZlfJsvp+EtU85W5GfldbAJHsrtOfmZoFc9xkHvxGRAXr/9+gFwF9pXkxHI7lDAMzfQH9U5PCzbz4nCxook+kp3EDsFNTVeVUIlDsqTbgwg7/spUFqc6WssEziybvY"};</script>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"lH57IXJpJ3VytVCZ1zma6g==","iv":"0T4AKYLzMDGF0xfp","ct":"gY3Y6EAiJoxr/2ERqg09Eg0GxyvaGduVqfOBwUPBU+fbTD+IFPOUIJfjZhpWAiir0HIE1xJtpQO0jcSbQBSCGULsmt1YnWyzQ0Xw8B7lNW/m0Mwzt/pFGgwOMsXu3gcsziha9xEqzeZGxpr3oZF785E/qZV344C6zAcDxYjqzgSR0j9wFgQNJr8G1mSg2cIswI0DZzzJJ3BkL1r9Df1vmV+6nmkdlW2XI9M6LwnKZbcrVvUjlBP1hkxXT35IeymaT8gkWIodeG4p/SJVOvBbib6t98wPuA4WlyN7ci/lTaR0DiGCw+XVkwkf77S/XCWYdiE2tLgjjjIoUHZP2E84FGUi9x+pJ5mYZgj3+izAFWc6/xp2gyuSkx9BXWItGGHzI3CnhEkYeT+P95a4hWgXxK/ueRZMPMl2+2byfGN+Xa+z6wqiM1sFicBTyBmqmoZqEy43y8DXtxBQO7JuKhuYy3u0HyQexRaXdqfhPt6N6GVWC1Xv//UtG8QT"};</script>
 <style>
 :root{
   --bg:#f5fafd; --bg2:#fbf8f2; --panel:#ffffff; --panel2:#f6faff; --line:#e9dfcf;
@@ -177,7 +177,7 @@ input{font:inherit}
   background:#fbfdff;opacity:0;pointer-events:none;z-index:1;
   transform:translateY(6px) scale(.996);
   transition:opacity var(--dur) var(--ease),transform .3s var(--ease)}
-.view.on{opacity:1;transform:none;pointer-events:auto;z-index:2}
+.view.on{opacity:1;pointer-events:auto;z-index:2}
 
 /* 还没有任何报告时的空状态（照样能解锁进来，只是没内容） */
 #empty{position:absolute;inset:0;z-index:3;display:none;padding:26px;
@@ -398,6 +398,7 @@ function si(s,px){const d=slot(s);px=px||15;
     +'px;height:'+px+'px">'+d.p+'</svg>'}
 const VIEWS=[$("#viewA"),$("#viewB")];
 let KEY=null,ITEMS=null,CUR=null,ACTIVE=0,LASTDAY=null;
+const CACHE=new Map();          // fid → 已解密的正文（只在内存里）
 
 function store(k,v){try{if(v===undefined)return sessionStorage.getItem(k);
   sessionStorage.setItem(k,v)}catch(e){}return null}
@@ -468,6 +469,7 @@ async function doUnlock(){
     if(ITEMS.length){await openItem(ITEMS[0].f,true);}
     else{renderEmptyHead();showEmpty(true);}
     savePw(pw);                                   // 记一天，明天首次访问再输
+    preload();                                    // 后台把报告解密好，切换才丝滑
   }catch(e){
     ITEMS=null;KEY=null;
     forgetPw();                                  // 口令错了就别留着
@@ -487,24 +489,45 @@ function renderEmptyHead(){
   document.title="交易报告";
   $("#tabs").innerHTML="";LASTDAY=null;
 }
-async function openItem(fid,instant){
-  if(!fid||fid===CUR)return;
-  showEmpty(false);
+async function docOf(fid){
+  if(CACHE.has(fid))return CACHE.get(fid);
   const d=await (await fetch("data/"+fid+".json",{cache:"no-store"})).json();
   const pt=await crypto.subtle.decrypt(
     {name:"AES-GCM",iv:b64(d.iv),additionalData:new TextEncoder().encode(fid)},
     KEY,b64(d.ct));
   const html=new TextDecoder().decode(pt);
+  CACHE.set(fid,html);
+  return html;
+}
+async function warm(fid){
+  if(!fid||!KEY||CACHE.has(fid))return;
+  try{await docOf(fid)}catch(e){}
+}
+function preload(){                     // 登录后在空闲时把报告全部解密好
+  const idle=window.requestIdleCallback||(f=>setTimeout(f,100));
+  (ITEMS||[]).forEach(it=>idle(()=>warm(it.f),{timeout:1000}));
+}
+function markPending(fid,on){
+  const el=$("#nav").querySelector('.item[data-f="'+fid+'"]');
+  if(el)el.classList.toggle('pending',!!on);
+}
+async function openItem(fid,instant){
+  if(!fid||fid===CUR)return;
+  showEmpty(false);
+  markPending(fid,true);                 // 立刻反馈，不让点击"石沉大海"
+  const cached=CACHE.has(fid);
+  const html=await docOf(fid);
   const from=curView(),to=altView();
   await new Promise(res=>{
     let done=false;const fin=()=>{if(!done){done=true;res()}};
-    to.onload=fin;to.srcdoc=html;setTimeout(fin,1500);   // 兜底，别把界面卡住
+    to.onload=fin;to.srcdoc=html;setTimeout(fin,cached?250:1200);   // 兜底，别把界面卡住
   });
   to.classList.add("on");
   from.classList.remove("on");
   if(!instant)setTimeout(()=>{if(!from.classList.contains("on"))from.srcdoc="";},150);
   else from.srcdoc="";
   ACTIVE=1-ACTIVE;CUR=fid;
+  markPending(fid,false);
   refreshTabs();markActive();renderHead();
   if(innerWidth<900)toggleSide(false);
 }
