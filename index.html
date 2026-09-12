@@ -1,0 +1,156 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>交易报告</title>
+<style>
+:root{
+  --bg:#0a0c10;--surface:#11151c;--surface2:#161b23;--line:#1f2631;
+  --tx:#e9edf3;--tx2:#9aa5b4;--tx3:#69737f;--ac:#4f8cff;--ac2:#2f6fe0;
+  --ok:#2ea043;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);overflow:hidden;
+font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:14px;height:56px;padding:0 20px;z-index:5;
+background:rgba(17,21,28,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14px;letter-spacing:.3px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--tx3);transition:.3s}
+.dot.on{background:var(--ok);box-shadow:0 0 0 3px rgba(46,160,67,.15)}
+.sp{flex:1}
+.btn{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;
+transition:.18s;border:1px solid var(--line);background:var(--surface2);color:var(--tx)}
+.btn:hover{background:#1c222c;border-color:#2b3542}
+.btn.primary{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.primary:hover{background:var(--ac2)}
+input{font:inherit;font-size:13px;padding:8px 12px;border-radius:8px;outline:none;
+transition:.18s;border:1px solid var(--line);background:#0e1218;color:var(--tx)}
+input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(79,140,255,.12)}
+main{flex:1;display:flex;min-height:0}
+aside{width:272px;flex:0 0 272px;overflow-y:auto;padding:12px 10px;
+background:var(--surface);border-right:1px solid var(--line)}
+aside::-webkit-scrollbar{width:8px}
+aside::-webkit-scrollbar-thumb{background:#232c37;border-radius:4px}
+.grp{font-size:11px;letter-spacing:.06em;color:var(--tx3);margin:14px 8px 6px;
+font-variant-numeric:tabular-nums}
+.grp:first-child{margin-top:4px}
+.it{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;
+cursor:pointer;color:var(--tx2);font-size:13px;transition:.15s}
+.it:hover{background:#171d26;color:var(--tx)}
+.it.on{background:rgba(79,140,255,.14);color:#cfe0ff}
+.it.on .bullet{background:var(--ac)}
+.bullet{width:5px;height:5px;border-radius:50%;background:#333d4a;flex:0 0 5px}
+.it .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+section{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
+iframe{flex:1;border:0;width:100%;background:#fff;display:none}
+.center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+padding:32px;text-align:center}
+.lockcard{max-width:340px;width:100%}
+.lockcard h2{margin:0 0 6px;font-size:17px;font-weight:600}
+.lockcard p{margin:0 0 20px;color:var(--tx2);font-size:13px;line-height:1.7}
+.lockcard .row{display:flex;gap:8px}
+.lockcard input{flex:1}
+.err{color:#ff7b72;font-size:12.5px;min-height:18px;margin-top:10px}
+@media (max-width:720px){
+ aside{position:absolute;inset:56px auto 0 0;z-index:4;transform:translateX(-100%);
+  transition:.22s}
+ aside.open{transform:none}
+}
+</style></head><body>
+<header>
+  <div class="brand"><span class="dot" id="dot"></span>交易报告</div>
+  <span class="sp"></span>
+  <button class="btn" id="menu" style="display:none"
+    onclick="document.querySelector('aside').classList.toggle('open')">目录</button>
+  <button class="btn" id="lock" style="display:none" onclick="lock()">锁定</button>
+</header>
+<main>
+  <aside id="list"></aside>
+  <section>
+    <div class="center" id="gate">
+      <div class="lockcard">
+        <h2>需要口令</h2>
+        <p>所有内容在本机解密，服务器上只有密文。</p>
+        <div class="row">
+          <input id="pw" type="password" placeholder="访问口令" autocomplete="current-password">
+          <button class="btn primary" onclick="unlock()">解锁</button>
+        </div>
+        <div class="err" id="err"></div>
+      </div>
+    </div>
+    <iframe id="view" sandbox=""></iframe>
+  </section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+let KEY=null,META=null,CUR=null;
+const b64=d=>Uint8Array.from(atob(d),c=>c.charCodeAt(0));
+async function deriveKey(pw,salt,iter){
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),
+    'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},
+    base,{name:'AES-GCM',length:256},false,['decrypt']);
+}
+async function unlock(){
+  const pw=$('#pw').value.trim();
+  if(!pw)return;
+  $('#err').textContent='';
+  try{
+    if(!META){
+      const m=await (await fetch('data/manifest.json',{cache:'no-store'})).json();
+      const k=await deriveKey(pw,b64(m.salt),m.iter);
+      const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(m.iv)},k,b64(m.ct));
+      META={items:JSON.parse(new TextDecoder().decode(pt)).items};
+      KEY=k;
+    }
+    if(!META.items.length)throw new Error('empty');
+    await openItem(META.items[0].f);
+    sessionStorage.setItem('_p',pw);
+    $('#gate').style.display='none';$('#lock').style.display='';
+    $('#menu').style.display=innerWidth<=720?'':'none';
+    $('#dot').classList.add('on');
+    renderList();
+  }catch(e){
+    META=null;KEY=null;
+    $('#err').textContent='口令错误，或站点尚未生成报告。';
+  }
+}
+async function openItem(fid){
+  const d=await (await fetch('data/'+fid+'.json',{cache:'no-store'})).json();
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(d.iv)},KEY,b64(d.ct));
+  const v=$('#view');
+  v.srcdoc=new TextDecoder().decode(pt);
+  v.style.display='block';
+  CUR=fid;renderList();
+}
+function lock(){
+  KEY=null;META=null;CUR=null;sessionStorage.removeItem('_p');
+  const v=$('#view');v.style.display='none';v.srcdoc='';
+  $('#gate').style.display='flex';$('#lock').style.display='none';
+  $('#list').innerHTML='';$('#dot').classList.remove('on');$('#pw').value='';
+}
+function renderList(){
+  if(!META)return;
+  const by={};
+  META.items.forEach(i=>{(by[i.d]=by[i.d]||[]).push(i)});
+  let h='';
+  for(const d of Object.keys(by)){
+    h+='<div class="grp">'+d+'</div>';
+    by[d].forEach(i=>{
+      h+='<div class="it'+(i.f===CUR?' on':'')+'" data-f="'+i.f+'">'
+       +'<span class="bullet"></span><span class="t">'+i.s+'</span></div>';
+    });
+  }
+  const box=$('#list');box.innerHTML=h;
+  box.querySelectorAll('.it').forEach(el=>el.onclick=()=>{
+    openItem(el.dataset.f);
+    if(innerWidth<=720)box.classList.remove('open');
+  });
+}
+$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+window.addEventListener('DOMContentLoaded',()=>{
+  const pw=sessionStorage.getItem('_p');
+  if(pw){$('#pw').value=pw;unlock();}
+});
+</script></body></html>
