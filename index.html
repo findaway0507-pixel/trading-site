@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#fbfdff">
 <title>交易报告</title>
-<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"CGv4Cj9FjUtBQeHztyzZ9w==","iv":"WeTU7LbjiBmktJCY","ct":"518fNBtAaE9ZJvcnXtYdrcsCaKdPUra4oBkg7V0ER5WhGpHCM/+1ejiwApSCRz9pWwv9QE4kXLKpZBF3HpBP+GuhhvLmFvLIE7xRF/lKcOrwCQqPU6qZQMRoI1SRaXCWBX/tdLcn8TyInqP0pVlebRhdKZRAVreTQClUCizZy0ubHhgnHMKwEH/9xgPV9oi5tHkvsyo7HSpaO3rCafyzPFIn/N2DOe0DqyQx8BZMAVLAzfB1bJuipfFWCo4eDZeQMt9I+ChiUCx1maa2IlzBd7MIbZBKuNqd0gOpiPsC/BHNdLpoItblVpELbFQam0tAv+1ZG8DOsMXjjSY2poKBlhMD9rUrPmk+f7c2UnBNr6CMACmv9y4afDZm5/qvxBTRvLBzfkILbQn/TQjx+ue7xp6SjWGH4PJL0F5WUFJHwNoalXXr7ro8DtGcGuIUi2C+lof+e2eCetSzPO0chsX+pTib27hVYBfSPn9x75pLqUru6pgJp1n4I4EE00Qjk9ERMlQ+42BJKzmnAhHNtA9Kf3sIlzTDhyWCFoDQg4WZW4PkjolMcIMGackp7EgedF7HKm085LvHFysBm1qO7m7ICQezuI2cOQWHJKHtx7VagmQ42IRVIkQyxJA4QjMFwlHkkkC7loXNBvkj55zEXKBuNNKgcE72"};</script>
+<script>window.MF={"v":1,"iter":600000,"kdf":"PBKDF2-SHA256","salt":"ZUzwPdwYos81K9IuVusO4Q==","iv":"fUylQA6+riOK4e86","ct":"gG8teYy3tStSGkBw0E37Q4MLjKDHGZ6uUVPvLkanDGYJuAR4u9R0LkvLvDGya+CEo8sBrPlDDH4VW0jJ7jbwSyvlREPdLhyr6tDu0vxGuzSAZdzty+AT2UtAK7P/Ruhvab+8q/9ag7HR9fjZz409VyGDTdqT5JpjDkipySR9X4jZGz5j9GvIHi44ycGsUN2t+OQdv/e7BWgNy3S9aNNGX1jqZsZsHGyy6ZcKI/ZRm/3OTSFmtCcC8XLuw+/O+QAsOHL0jslxtoMnI35NV49ihJit3p7YnM+qr9D2982hHNqSxGLCBEzz/mWKoheEOpYb5DdPmAbpLAnjxJLeMnFezTGadCVrO24heIY1g7HMDx7CD2cxMAhe6qjuEktQoSZaa2wSOhO8bnub4Gr3/uSyYJGEvaX4+9aVDt73MmoU9JooTx9msRmD3PaNqSrb0aVDCSpQtN4focgtrF7mgXD3GJ5/DIwIsaYBVIYbj/mpvOTNs2JpvdlOzI2h9ZNO0pNqrFjNnvxyC5ISOOkIewdp3hACyB3Hs+zdhz/8dN/nzkds8v2hDeLpiLRXZ1Pr8lGAAWPHN3I0TL4nui5Sq4DEXs0rr8pg8yhsjxPozxsZhL1orMiHfsxw4vv+lqNvKPNUpllwif8gohLiEgKR8lOBGTiYYri1"};</script>
 <style>
 :root{
   /* 全蓝系。值对应 tokens/tokens.json 的语义层，改色先改那边，不要在这里发明新色。 */
@@ -173,6 +173,19 @@ input{font:inherit}
 .tab.on .si{stroke:#08243f !important}
 .tab.on .hm{color:rgba(8,36,63,.72)}
 
+/* 关键数字条：现在看的是哪一份、当天什么状态，一屏之内就能指认（指向性） */
+.kpis{display:flex;flex-wrap:wrap;gap:6px;padding:7px 14px;
+  border-bottom:1px solid var(--line);background:var(--bg)}
+.kpis:empty{display:none}
+.kpis .kp{display:inline-flex;align-items:center;gap:5px;max-width:100%;
+  padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:650;
+  color:var(--tx2);background:#fff;border:1px solid var(--line);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpis .kp b{color:var(--tx);font-weight:800}
+.kpis .kp.d-up{color:#9e2e22;border-color:#f0a29b;background:#fdecea}
+.kpis .kp.d-down{color:#0a6037;border-color:#8ad7a9;background:#e8f7ee}
+.kpis .kp.d-mid{color:var(--tx2);background:var(--panel2)}
+
 /* 报告区：两个 iframe 交叉淡入，切换不再白屏抖动 */
 .stage{flex:1;min-height:0;position:relative;background:var(--bg)}
 .view{position:absolute;inset:0;width:100%;height:100%;border:0;
@@ -249,6 +262,8 @@ input{font:inherit}
   .ghost{min-height:40px}
   .tabs{padding:8px 10px;gap:6px;position:sticky;top:52px;z-index:15}
   .tab{min-height:40px;padding:9px 13px}
+  .kpis{padding:5px 10px;gap:5px}
+  .kpis .kp{font-size:11px;padding:2px 8px}
   .item{min-height:46px;padding:12px 12px}
   .day-h{min-height:46px;padding:11px 11px}
   .side-h{min-height:56px}
@@ -360,6 +375,7 @@ input{font:inherit}
         </svg>锁定</button>
     </header>
     <div class="tabs" id="tabs"></div>
+    <div class="kpis" id="kpis"></div>
     <div class="stage">
       <!-- 报告正文要记住"哪几段是展开的"，所以放开脚本；但**不给 same-origin**，
            正文仍是 opaque origin —— 读不到外壳的 DOM 与 localStorage，只能 postMessage。 -->
@@ -458,6 +474,7 @@ function foldView(src){
 window.addEventListener("message",e=>{
   const d=e.data;
   if(!d||typeof d!=="object"||typeof d.t!=="string")return;
+  if(d.t==="mfnav"){step(d.dir>0?1:-1);return}      // 正文里左右滑 = 换时段
   if(d.t.indexOf("mffold:")!==0)return;
   const v=foldView(e.source);if(!v)return;
   const fid=v.dataset.fid;if(!fid)return;
@@ -465,6 +482,71 @@ window.addEventListener("message",e=>{
     try{e.source.postMessage({t:"mffold:state",map:foldAll()[fid]||{}},"*")}catch(err){}
   }else if(d.t==="mffold:set"&&typeof d.id==="string"){
     foldSave(fid,d.id,!!d.open);
+  }
+});
+
+/* 关键数字条：从已解密的正文里摘四条（方向 / 大盘仓位 / 指数 / 情绪），
+   不再多发一次请求，也不用让正文和外壳互相依赖。 */
+function kpiChips(html){
+  const box=document.createElement("div");box.innerHTML=html;
+  const pick=lab=>{
+    const rows=box.querySelectorAll(".brief .bl");
+    for(let i=0;i<rows.length;i++){
+      const bk=rows[i].querySelector(".bk");
+      if(bk&&bk.textContent.trim()===lab){
+        const bv=rows[i].querySelector(".bv");if(!bv)return"";
+        const c=bv.cloneNode(true);
+        c.querySelectorAll("em").forEach(e=>e.remove());
+        return (c.textContent||"").replace(/\s+/g," ").trim();
+      }
+    }
+    return"";
+  };
+  const bias=box.querySelector(".brief .bias");
+  const big=box.querySelector(".hero .big");
+  const stage=big&&big.firstChild?String(big.firstChild.textContent).trim():"";
+  const posEl=box.querySelector(".hero b");
+  const pos=posEl?posEl.textContent.trim():"";
+  const idx=pick("指数"), idxOld=pick("昨收指数");
+  const emo=pick("情绪")||pick("昨日情绪");
+  const out=[];
+  if(bias){
+    const cl=bias.className||"";
+    out.push({cls:"d "+(cl.indexOf("bias-up")>-1?"d-up":cl.indexOf("bias-down")>-1?"d-down":"d-mid"),
+      k:"方向",v:bias.textContent.trim()});
+  }
+  if(stage||pos)out.push({k:"大盘",v:stage+(pos?" · 仓位 "+pos:"")});
+  if(idx||idxOld){
+    const lg=pick("情绪")||pick("昨日情绪");          // 已知是当天基准还是昨收
+    out.push({k:"",v:(lg?"":"昨收 ")+(idx||idxOld)});
+  }
+  if(emo)out.push({k:"",v:emo.split("·").slice(0,2).join("·").trim()});
+  return out;
+}
+function renderKpis(html){
+  const el=$("#kpis");if(!el)return;
+  el.innerHTML=html?kpiChips(html).map(x=>
+    '<span class="kp '+x.cls+'">'+(x.k?'<b>'+esc(x.k)+'</b>':'')+esc(x.v)+'</span>'
+  ).join(""):"";
+}
+
+/* 快速切换：键盘 ←/→ 与 1~4，手机左右滑（滑动在正文里，由 postMessage 送过来） */
+function sameDayItems(){const c=cur();if(!c)return[];return(byDate().find(x=>x[0]===c.d)||[])[1]||[]}
+function step(delta){
+  const arr=sameDayItems();const i=arr.findIndex(x=>x.f===CUR);
+  if(i<0||!arr.length)return;
+  openItem(arr[(i+delta+arr.length)%arr.length].f);
+}
+document.addEventListener("keydown",e=>{
+  if(!$("#app").classList.contains("show"))return;
+  const t=e.target;
+  if(t&&/(INPUT|TEXTAREA|SELECT)/.test(t.tagName))return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key==="ArrowRight"){step(1);e.preventDefault()}
+  else if(e.key==="ArrowLeft"){step(-1);e.preventDefault()}
+  else if(e.key>="1"&&e.key<="4"){
+    const it=sameDayItems()[+e.key-1];
+    if(it){openItem(it.f);e.preventDefault()}
   }
 });
 
@@ -509,7 +591,13 @@ async function doUnlock(){
     $("#app").classList.add("show");
     $("#dot").classList.add("on");
     buildNav();refreshTabs();
-    if(ITEMS.length){await openItem(ITEMS[0].f,true);}
+    if(ITEMS.length){
+      // 上次看到哪份就接着看哪份（换设备/清缓存后自动回到最新）
+      let first=ITEMS[0].f;
+      try{const last=localStorage.getItem("_last");
+        if(last&&ITEMS.some(i=>i.f===last))first=last;}catch(e){}
+      await openItem(first,true);
+    }
     else{renderEmptyHead();showEmpty(true);}
     savePw(pw);                                   // 记一天，明天首次访问再输
     preload();                                    // 后台把报告解密好，切换才丝滑
@@ -524,16 +612,18 @@ function altView(){return VIEWS[1-ACTIVE]}
 /* fid 用于折叠记忆归属（预览无口令模式也走这里）；不给就按不记名处理 */
 function setDocSync(html,fid){const v=curView();if(!v)return;
   if(fid)v.dataset.fid=fid;
+  renderKpis(html);
   v.classList.add("on");v.srcdoc=html;}
 function showEmpty(on){
   $("#empty").classList.toggle("show",!!on);
-  if(on)VIEWS.forEach(v=>{v.classList.remove("on");v.srcdoc="";});
+  if(on){VIEWS.forEach(v=>{v.classList.remove("on");v.srcdoc="";});renderKpis("");}
 }
 function renderEmptyHead(){
   $("#curTitle").textContent="暂无报告";
   $("#curSub").textContent="每天盘前 / 盘中 / 盘后自动生成后出现在这里";
   document.title="交易报告";
   $("#tabs").innerHTML="";LASTDAY=null;
+  renderKpis("");
 }
 async function docOf(fid){
   if(CACHE.has(fid))return CACHE.get(fid);
@@ -563,6 +653,7 @@ async function openItem(fid,instant){
   markPending(fid,true);                 // 立刻反馈，不让点击"石沉大海"
   const cached=CACHE.has(fid);
   const html=await docOf(fid);
+  renderKpis(html);                       // 关键数字条跟着一起换，别等内容加载完
   const from=curView(),to=altView();
   await new Promise(res=>{
     let done=false;const fin=()=>{if(!done){done=true;res()}};
@@ -574,6 +665,7 @@ async function openItem(fid,instant){
   if(!instant)setTimeout(()=>{if(!from.classList.contains("on"))from.srcdoc="";},150);
   else from.srcdoc="";
   ACTIVE=1-ACTIVE;CUR=fid;
+  try{localStorage.setItem("_last",fid)}catch(e){}
   markPending(fid,false);
   refreshTabs();markActive();renderHead();
   if(innerWidth<900)toggleSide(false);
@@ -658,6 +750,7 @@ function doLock(){
   $("#nav").innerHTML="";$("#tabs").innerHTML="";
   $("#app").classList.remove("show");$("#gate").classList.remove("hide");
   $("#dot").classList.remove("on");$("#pw").value="";
+  $("#kpis").innerHTML="";
 }
 window.addEventListener("DOMContentLoaded",()=>{
   paintHero();
